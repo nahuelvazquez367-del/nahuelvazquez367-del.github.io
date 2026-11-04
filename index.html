@@ -417,6 +417,71 @@
   footer{ text-align:center; padding:30px 6% 40px; color:var(--text-muted); font-size:0.85rem; }
   footer .creators{ margin-top:6px; color:var(--violet-glow); font-weight:600; font-family:'Rajdhani',sans-serif; letter-spacing:0.03em; }
   footer .note{ margin-top:14px; font-size:0.75rem; color:var(--text-muted); opacity:0.8; max-width:640px; margin-left:auto; margin-right:auto; }
+
+  .custom-form{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:25px;
+    max-width:900px;
+    margin:auto;
+}
+
+.custom-form input,
+.custom-form select,
+.custom-form textarea{
+    width:100%;
+    margin-bottom:14px;
+}
+
+.radio-group,
+.checkbox-group{
+    margin:10px 0 15px;
+}
+
+.radio-group label,
+.checkbox-group label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--text-light);
+}
+
+.custom-form input:focus,
+.custom-form textarea:focus,
+.custom-form select:focus{
+    border-color:var(--violet-primary);
+    box-shadow:0 0 8px rgba(139,92,255,.4);
+}
+
+.custom-form input:valid,
+.custom-form textarea:valid,
+.custom-form select:valid{
+    border-color:var(--ok);
+}
+
+.custom-form input:invalid:not(:placeholder-shown),
+.custom-form textarea:invalid:not(:placeholder-shown){
+    border-color:var(--bad);
+}
+
+.confirmacion{
+    margin-top:15px;
+    color:var(--ok);
+    font-weight:700;
+    font-size:1rem;
+}
+
+@media(max-width:768px){
+
+    .custom-form{
+        padding:15px;
+    }
+
+    .section-title h2{
+        font-size:1.4rem;
+    }
+
+}
 </style>
 </head>
 <body>
@@ -683,7 +748,7 @@
 
 <footer>
   <div>TecaGames — reemplazá los enlaces "#" por tus links reales de descarga y wiki.</div>
-  <div class="creators">Creado por Gordomancha, Natxz y hernn.c</div>
+  <div class="creators">Creado por cornudin, Natxz y hernn.c</div>
   <p class="note">
     Nota técnica: el registro de usuarios, las opiniones, los puntajes y los "me gusta" de esta página
     se guardan solo en la memoria del navegador mientras la pestaña está abierta (se pierden al recargar
@@ -1191,6 +1256,71 @@ function updateAuthUI(){
   updateGeneralFormVisibility();
 }
 
+  const playerForm = document.getElementById("playerForm");
+
+playerForm.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombre").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const fechaNacimiento = document.getElementById("fechaNacimiento").value;
+    const mensaje = document.getElementById("mensajeConfirmacion");
+
+    const fechaNac = new Date(fechaNacimiento);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNac.getFullYear();
+
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+        edad--;
+    }
+
+    if(edad < 13){
+        mensaje.style.color = "#ff8686";
+        mensaje.textContent = "Debes tener al menos 13 años para registrarte.";
+        return;
+    }
+
+    if(password !== confirmPassword){
+        mensaje.style.color = "#ff8686";
+        mensaje.textContent = "Las contraseñas no coinciden.";
+        return;
+    }
+
+    await fetch(
+    "TU_URL_DE_APPS_SCRIPT",
+    {
+        method:"POST",
+        body:JSON.stringify({
+            nombre:nombre,
+            email:document.getElementById("emailJugador").value,
+            telefono:document.getElementById("telefono").value,
+            fechaNacimiento:fechaNacimiento,
+            pais:document.getElementById("pais").value,
+            plataforma:document.querySelector(
+                'input[name="plataforma"]:checked'
+            ).value,
+            comentarios:document.getElementById("comentarios").value
+        })
+    }
+);
+
+playerForm.reset();
+
+mensaje.style.color = "#7ee787";
+mensaje.textContent =
+    "✅ Registro enviado correctamente. Bienvenido/a " + nombre;
+  
+    mensaje.style.color = "#7ee787";
+    mensaje.textContent =
+        "✅ Registro enviado correctamente. Bienvenido/a " + nombre;
+
+});
+  
 renderCatalog();
 renderNews();
 renderGeneralReviews();
