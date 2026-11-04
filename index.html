@@ -1293,20 +1293,20 @@ playerForm.addEventListener("submit", async function(e){
 
     await fetch(
     "https://script.google.com/macros/s/AKfycbw-40UdZUyG6psOKBVFKdgywsz1xkXqqFGjKh_XPVYxCVMNwFV9bcr1NtddYPoV00juwA/exec",
-    {
-        method:"POST",
-        body:JSON.stringify({
-            nombre:nombre,
-            email:document.getElementById("emailJugador").value,
-            telefono:document.getElementById("telefono").value,
-            fechaNacimiento:fechaNacimiento,
-            pais:document.getElementById("pais").value,
-            plataforma:document.querySelector(
-                'input[name="plataforma"]:checked'
-            ).value,
-            comentarios:document.getElementById("comentarios").value
-        })
-    }
+   {
+    method: "POST",
+    body: JSON.stringify({
+        Nombre: nombre,
+        Email: document.getElementById("emailJugador").value,
+        Telefono: document.getElementById("telefono").value,
+        FechaNacimiento: fechaNacimiento,
+        Pais: document.getElementById("pais").value,
+        Plataforma: document.querySelector(
+            'input[name="plataforma"]:checked'
+        ).value,
+        Comentarios: document.getElementById("comentarios").value
+    })
+}
 );
 
 playerForm.reset();
